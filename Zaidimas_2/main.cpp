@@ -2,6 +2,8 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
+#include <string>
+#include <sstream>
 #include <vector>
 #include <utility>
 #include <random>
@@ -95,8 +97,21 @@ int main()
 		return -1;
 	}
 
+	// TASKAI
+	uint64_t score = 0;
+	std::stringstream ss;
+	std::string scoreString;
+	sf::Text scoreText;
+
+	scoreText.setFont(font);
+	scoreText.setString(scoreString);
+	scoreText.setCharacterSize(40);
+	scoreText.setFillColor(sf::Color::Green);
+	scoreText.setPosition(0, 0);
+
 	// "GAME OVER!"
 	sf::Text gameOverText;
+
 	gameOverText.setFont(font);
 	gameOverText.setString("GAME OVER!");
 	gameOverText.setCharacterSize(100);
@@ -110,6 +125,7 @@ int main()
 
 	// "PRADETI ZAIDIMA?"
 	sf::Text gameStartText;
+
 	gameStartText.setFont(font);
 	gameStartText.setString("PRESS ENTER TO START");
 	gameStartText.setCharacterSize(72);
@@ -144,6 +160,8 @@ int main()
 				enemyProperties[i].second = randomizerSpeed();
 
 				enemies[i].setPosition(enemyProperties[i].first, 0.f);
+
+				score++;
 			}
 		}
 
@@ -169,9 +187,17 @@ int main()
 		// ZAIDEJO JUDEJIMAS/VALDYMAS
 		playerMovement(player);
 
+		// TASKU KEITIMAS
+		ss.clear();
+		ss << score;
+		ss >> scoreString;
+		scoreText.setString("Raindrops: " + scoreString);
+
 		// PIESIMAS
 		window.clear();
+
 		window.draw(player);
+		window.draw(scoreText);
 		
 		for (int i = 0; i < ENEMY_COUNT; i++)
 		{
