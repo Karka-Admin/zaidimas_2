@@ -9,7 +9,7 @@
 #include <utility>
 #include <random>
 
-#define ENEMY_COUNT	8
+#define ENEMY_COUNT	6
 int minSpeed = 2;
 int maxSpeed = 5;
 
@@ -88,16 +88,14 @@ int main()
 	// Veikejas
 	sf::Vector2f playerSize(50.f, 50.f);
 	sf::RectangleShape player(playerSize);
-	//player.setFillColor(sf::Color::Red);
 	player.setPosition(0.f, 850.f);
 
-	sf::Texture texture;
-	if (!texture.loadFromFile("sugar.jpg"))
+	sf::Texture playerTexture;
+	if (!playerTexture.loadFromFile("sugar.jpg"))
 	{
 		return -1;
 	}
-
-	player.setTexture(&texture);
+	player.setTexture(&playerTexture);
 
 	// Priesai
 	std::pair<float, float> enemyProperties[ENEMY_COUNT];
@@ -107,9 +105,9 @@ int main()
 		enemyProperties[i].second = randomizerSpeed();
 	}
 
-	sf::Vector2f enemySize(15.f, 70.f);
+	sf::Vector2f enemySize(20.f, 65.f);
 	sf::RectangleShape enemy(enemySize);
-	enemy.setFillColor(sf::Color(0, 255, 255, 200));
+	enemy.setFillColor(sf::Color(0, 255, 255, 255));
 
 	std::vector <sf::RectangleShape> enemies(ENEMY_COUNT);
 	for (int i = 0; i < ENEMY_COUNT; i++)
