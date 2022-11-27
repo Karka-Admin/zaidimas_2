@@ -91,6 +91,14 @@ int main()
 	player.setFillColor(sf::Color::Red);
 	player.setPosition(0.f, 850.f);
 
+	sf::Texture texture;
+	if (!texture.loadFromFile("sugar.jpg"))
+	{
+		return -1;
+	}
+
+	player.setTexture(&texture);
+
 	// Priesai
 	std::pair<float, float> enemyProperties[ENEMY_COUNT];
 	for (int i = 0; i < ENEMY_COUNT; i++)
