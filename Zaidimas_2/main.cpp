@@ -11,7 +11,7 @@
 
 #define ENEMY_COUNT	6
 int minSpeed = 2;
-int maxSpeed = 5;
+int maxSpeed = 4;
 
 
 void playerMovement(sf::RectangleShape &player)
