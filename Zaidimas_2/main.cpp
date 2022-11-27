@@ -1,7 +1,8 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -9,32 +10,25 @@
 #include <utility>
 #include <random>
 
-#define ENEMY_COUNT	6
+// ZAIDIMO NUSTATYMAI
+#define ENEMY_COUNT	5
 int minSpeed = 2;
 int maxSpeed = 4;
 
-
-void playerMovement(sf::RectangleShape &player)
+// ZAIDEJO JUDEJIMO VALDYMAS
+void playerMovement(sf::RectangleShape& player)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && player.getPosition().x < 950)
 	{
-		player.move(5.f, 0.f);
+		player.move(4.f, 0.f);
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && player.getPosition().x > -1)
 	{
-		player.move(-5.f, 0.f);
+		player.move(-4.f, 0.f);
 	}
-	
-	/*else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && player.getPosition().y > -1)
-	{
-		player.move(0.f, -5.f);
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && player.getPosition().y < 950)
-	{
-		player.move(0.f, 5.f);
-	}*/
 }
 
+// ATSITIKTINIU SKAICIU GENERATORIAI
 float randomizerX()
 {
 	std::random_device rd;
@@ -62,7 +56,8 @@ float randomizerColor()
 	return float(distr(gen));
 }
 
-void checkWindowEvents(sf::RenderWindow &window)
+// LANGO IVYKIU TIKRINIMAS
+void checkWindowEvents(sf::RenderWindow& window)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
@@ -72,12 +67,12 @@ void checkWindowEvents(sf::RenderWindow &window)
 
 int main()
 {
-	// Langas
+	// LANGAS
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Avoid the rain!", sf::Style::Close);
 	window.setPosition(sf::Vector2i(0, 10));
 	window.setFramerateLimit(500);
 
-	// Muzika
+	// MUZIKA
 	sf::Music music;
 	if (!music.openFromFile("music.ogg"))
 	{
@@ -85,7 +80,7 @@ int main()
 	}
 	music.play();
 
-	// Veikejas
+	// VEIKEJAS
 	sf::Vector2f playerSize(50.f, 50.f);
 	sf::RectangleShape player(playerSize);
 	player.setPosition(0.f, 850.f);
@@ -97,7 +92,7 @@ int main()
 	}
 	player.setTexture(&playerTexture);
 
-	// Priesai
+	// LIETUS
 	std::pair<float, float> enemyProperties[ENEMY_COUNT];
 	for (int i = 0; i < ENEMY_COUNT; i++)
 	{
@@ -248,7 +243,7 @@ int main()
 
 		window.draw(player);
 		window.draw(scoreText);
-		
+
 		for (int i = 0; i < ENEMY_COUNT; i++)
 		{
 			window.draw(enemies[i]);
