@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -8,7 +9,10 @@
 #include <utility>
 #include <random>
 
-#define ENEMY_COUNT	5
+#define ENEMY_COUNT	10
+int minSpeed = 1;
+int maxSpeed = 3;
+
 
 void playerMovement(sf::RectangleShape &player)
 {
@@ -44,7 +48,16 @@ float randomizerSpeed()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> distr(3, 6);
+	std::uniform_int_distribution<> distr(minSpeed, maxSpeed);
+
+	return float(distr(gen));
+}
+
+float randomizerColor()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> distr(100, 255);
 
 	return float(distr(gen));
 }
@@ -64,6 +77,14 @@ int main()
 	window.setPosition(sf::Vector2i(0, 10));
 	window.setFramerateLimit(300);
 
+	//Muzoncikas
+	sf::Music music;
+	if (!music.openFromFile("music.ogg"))
+	{
+		return -1;
+	}
+	music.play();
+
 	// Veikejas
 	sf::Vector2f playerSize(50.f, 50.f);
 	sf::RectangleShape player(playerSize);
@@ -78,15 +99,16 @@ int main()
 		enemyProperties[i].second = randomizerSpeed();
 	}
 
-	sf::Vector2f enemySize(50.f, 50.f);
+	sf::Vector2f enemySize(15.f, 70.f);
 	sf::RectangleShape enemy(enemySize);
-	enemy.setFillColor(sf::Color::Cyan);
+	enemy.setFillColor(sf::Color(0, 255, 255, 200));
 
 	std::vector <sf::RectangleShape> enemies(ENEMY_COUNT);
 	for (int i = 0; i < ENEMY_COUNT; i++)
 	{
 		enemies[i] = enemy;
 		enemies[i].setPosition(randomizerX(), 0.f);
+		enemies[i].setFillColor(sf::Color(0, 255, 255, randomizerColor()));
 	}
 
 	// TEKSTAS
@@ -160,9 +182,25 @@ int main()
 				enemyProperties[i].second = randomizerSpeed();
 
 				enemies[i].setPosition(enemyProperties[i].first, 0.f);
+				enemies[i].setFillColor(sf::Color(0, 255, 255, randomizerColor()));
 
 				score++;
 			}
+		}
+
+		switch (score)
+		{
+		case 20:
+			minSpeed = 2;
+			maxSpeed = 4;
+			break;
+		case 50:
+			minSpeed = 3;
+			maxSpeed = 6;
+			break;
+
+			default:
+			break;
 		}
 
 		for (int i = 0; i < ENEMY_COUNT; i++)
