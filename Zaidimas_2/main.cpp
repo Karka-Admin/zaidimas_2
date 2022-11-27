@@ -88,7 +88,7 @@ int main()
 	// Veikejas
 	sf::Vector2f playerSize(50.f, 50.f);
 	sf::RectangleShape player(playerSize);
-	player.setFillColor(sf::Color::Red);
+	//player.setFillColor(sf::Color::Red);
 	player.setPosition(0.f, 850.f);
 
 	sf::Texture texture;
