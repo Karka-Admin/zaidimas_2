@@ -77,7 +77,7 @@ int main()
 	window.setPosition(sf::Vector2i(0, 10));
 	window.setFramerateLimit(300);
 
-	//Muzoncikas
+	// Muzika
 	sf::Music music;
 	if (!music.openFromFile("music.ogg"))
 	{
@@ -194,12 +194,13 @@ int main()
 			minSpeed = 2;
 			maxSpeed = 4;
 			break;
+
 		case 50:
 			minSpeed = 3;
 			maxSpeed = 6;
 			break;
 
-			default:
+		default:
 			break;
 		}
 
@@ -229,7 +230,7 @@ int main()
 		ss.clear();
 		ss << score;
 		ss >> scoreString;
-		scoreText.setString("Raindrops: " + scoreString);
+		scoreText.setString("Raindrops:" + scoreString);
 
 		// PIESIMAS
 		window.clear();
