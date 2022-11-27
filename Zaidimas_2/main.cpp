@@ -9,9 +9,9 @@
 #include <utility>
 #include <random>
 
-#define ENEMY_COUNT	10
-int minSpeed = 1;
-int maxSpeed = 3;
+#define ENEMY_COUNT	8
+int minSpeed = 2;
+int maxSpeed = 5;
 
 
 void playerMovement(sf::RectangleShape &player)
@@ -75,7 +75,7 @@ int main()
 	// Langas
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Avoid the rain!", sf::Style::Close);
 	window.setPosition(sf::Vector2i(0, 10));
-	window.setFramerateLimit(300);
+	window.setFramerateLimit(500);
 
 	// Muzika
 	sf::Music music;
@@ -190,14 +190,19 @@ int main()
 
 		switch (score)
 		{
-		case 20:
-			minSpeed = 2;
-			maxSpeed = 4;
-			break;
-
 		case 50:
 			minSpeed = 3;
 			maxSpeed = 6;
+			break;
+
+		case 100:
+			minSpeed = 4;
+			maxSpeed = 7;
+			break;
+
+		case 150:
+			minSpeed = 5;
+			maxSpeed = 8;
 			break;
 
 		default:
@@ -246,5 +251,5 @@ int main()
 		window.display();
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }
