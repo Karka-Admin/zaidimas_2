@@ -11,7 +11,7 @@
 #include <random>
 
 // ZAIDIMO NUSTATYMAI
-#define ENEMY_COUNT	5
+#define ENEMY_COUNT	7
 int minSpeed = 2;
 int maxSpeed = 4;
 
@@ -70,7 +70,7 @@ int main()
 	// LANGAS
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Avoid the rain!", sf::Style::Close);
 	window.setPosition(sf::Vector2i(0, 10));
-	window.setFramerateLimit(500);
+	window.setFramerateLimit(300);
 
 	// MUZIKA
 	sf::Music music;
