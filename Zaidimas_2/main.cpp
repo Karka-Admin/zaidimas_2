@@ -160,6 +160,20 @@ int main()
 	);
 	exitText.setPosition(500.f, 500.f);
 
+	// RESTART
+	sf::Text restartText;
+
+	restartText.setFont(font);
+	restartText.setString("Press R to restart");
+	restartText.setCharacterSize(75);
+	restartText.setFillColor(sf::Color::Red);
+	restartText.setOrigin
+	(
+		restartText.getLocalBounds().left + restartText.getGlobalBounds().width / 2.0f,
+		restartText.getLocalBounds().top + restartText.getGlobalBounds().height / 2.0f
+	);
+	restartText.setPosition(500.f, 750.f);
+
 	// "PRADETI ZAIDIMA?"
 	sf::Text gameStartText;
 
@@ -236,6 +250,7 @@ int main()
 			{
 				window.draw(gameOverText);
 				window.draw(exitText);
+				window.draw(restartText);
 				window.display();
 				music.stop();
 
