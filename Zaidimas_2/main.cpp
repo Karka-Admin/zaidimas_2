@@ -144,7 +144,21 @@ int main()
 		gameOverText.getLocalBounds().left + gameOverText.getGlobalBounds().width / 2.0f,
 		gameOverText.getLocalBounds().top + gameOverText.getGlobalBounds().height / 2.0f
 	);
-	gameOverText.setPosition(500.f, 500.f);
+	gameOverText.setPosition(500.f, 250.f);
+
+	// ISEITI IS ZAIDIMO
+	sf::Text exitText;
+
+	exitText.setFont(font);
+	exitText.setString("TO QUIT PRESS ESC");
+	exitText.setCharacterSize(75);
+	exitText.setFillColor(sf::Color::Red);
+	exitText.setOrigin
+	(
+		exitText.getLocalBounds().left + exitText.getGlobalBounds().width / 2.0f,
+		exitText.getLocalBounds().top + exitText.getGlobalBounds().height / 2.0f
+	);
+	exitText.setPosition(500.f, 500.f);
 
 	// "PRADETI ZAIDIMA?"
 	sf::Text gameStartText;
@@ -159,6 +173,7 @@ int main()
 		gameStartText.getLocalBounds().top + gameStartText.getGlobalBounds().height / 2.0f
 	);
 	gameStartText.setPosition(500.f, 500.f);
+
 
 	// PRADZIOS LANGAS
 	window.draw(gameStartText);
@@ -220,7 +235,9 @@ int main()
 			if (player.getGlobalBounds().intersects(enemies[i].getGlobalBounds()))
 			{
 				window.draw(gameOverText);
+				window.draw(exitText);
 				window.display();
+				music.stop();
 
 				while (window.isOpen())
 				{
