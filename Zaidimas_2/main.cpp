@@ -12,8 +12,16 @@
 
 // ZAIDIMO NUSTATYMAI
 #define ENEMY_COUNT	7
-int minSpeed = 2;
-int maxSpeed = 4;
+
+struct Options
+{
+	uint8_t		minSpeed	= 2;
+	uint8_t		maxSpeed	= 4;
+	uint16_t	minX		= 0;
+	uint16_t	maxX		= 950;
+	uint8_t		minAlpha	= 100;
+	uint8_t		maxAlpha	= 255;
+};
 
 // ZAIDEJO JUDEJIMO VALDYMAS
 void playerMovement(sf::RectangleShape& player)
@@ -28,30 +36,21 @@ void playerMovement(sf::RectangleShape& player)
 	}
 }
 
-// ATSITIKTINIU SKAICIU GENERATORIAI
-float randomizerX()
+// ATSITIKTINIU SKAICIU GENERATORIUS (su overloadais)
+float randomizer(uint16_t &min, uint16_t &max)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> distr(0, 950);
+	std::uniform_int_distribution<> distr(min, max);
 
 	return float(distr(gen));
 }
 
-float randomizerSpeed()
+float randomizer(uint8_t& min, uint8_t& max)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> distr(minSpeed, maxSpeed);
-
-	return float(distr(gen));
-}
-
-float randomizerColor()
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> distr(100, 255);
+	std::uniform_int_distribution<> distr(min, max);
 
 	return float(distr(gen));
 }
@@ -63,6 +62,10 @@ void checkWindowEvents(sf::RenderWindow& window)
 	{
 		window.close();
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+	{
+		
+	}
 }
 
 int main()
@@ -72,44 +75,48 @@ int main()
 	window.setPosition(sf::Vector2i(0, 10));
 	window.setFramerateLimit(300);
 
+	// NUSTATYMAI
+	Options options;
+
 	// MUZIKA
 	sf::Music music;
 	if (!music.openFromFile("music.ogg"))
 	{
 		return -1;
 	}
-	music.play();
 
 	// VEIKEJAS
 	sf::Vector2f playerSize(50.f, 50.f);
 	sf::RectangleShape player(playerSize);
-	player.setPosition(0.f, 850.f);
-
 	sf::Texture playerTexture;
+
 	if (!playerTexture.loadFromFile("sugar.jpg"))
 	{
 		return -1;
 	}
+
 	player.setTexture(&playerTexture);
+	player.setPosition(0.f, 850.f);
 
 	// LIETUS
 	std::pair<float, float> enemyProperties[ENEMY_COUNT];
-	for (int i = 0; i < ENEMY_COUNT; i++)
-	{
-		enemyProperties[i].first = randomizerX();
-		enemyProperties[i].second = randomizerSpeed();
-	}
-
 	sf::Vector2f enemySize(20.f, 65.f);
 	sf::RectangleShape enemy(enemySize);
+	std::vector <sf::RectangleShape> enemies(ENEMY_COUNT);
+
 	enemy.setFillColor(sf::Color(0, 255, 255, 255));
 
-	std::vector <sf::RectangleShape> enemies(ENEMY_COUNT);
-	for (int i = 0; i < ENEMY_COUNT; i++)
+	for (uint8_t i = 0; i < ENEMY_COUNT; i++)
+	{
+		enemyProperties[i].first = randomizer(options.minX, options.maxX);
+		enemyProperties[i].second = randomizer(options.minSpeed, options.maxSpeed);
+	}
+
+	for (uint8_t i = 0; i < ENEMY_COUNT; i++)
 	{
 		enemies[i] = enemy;
-		enemies[i].setPosition(randomizerX(), 0.f);
-		enemies[i].setFillColor(sf::Color(0, 255, 255, randomizerColor()));
+		enemies[i].setPosition(randomizer(options.minX, options.maxX), 0.f);
+		enemies[i].setFillColor(sf::Color(0, 255, 255, randomizer(options.minAlpha, options.maxAlpha)));
 	}
 
 	// TEKSTAS
@@ -146,11 +153,11 @@ int main()
 	);
 	gameOverText.setPosition(500.f, 250.f);
 
-	// ISEITI IS ZAIDIMO
+	// "PRESS ESC TO QUIT!"
 	sf::Text exitText;
 
 	exitText.setFont(font);
-	exitText.setString("TO QUIT PRESS ESC");
+	exitText.setString("PRESS ESC TO QUIT");
 	exitText.setCharacterSize(75);
 	exitText.setFillColor(sf::Color::Red);
 	exitText.setOrigin
@@ -160,11 +167,11 @@ int main()
 	);
 	exitText.setPosition(500.f, 500.f);
 
-	// RESTART
+	// "PRESS R TO RESTART"
 	sf::Text restartText;
 
 	restartText.setFont(font);
-	restartText.setString("Press R to restart");
+	restartText.setString("PRESS R TO RESTART");
 	restartText.setCharacterSize(75);
 	restartText.setFillColor(sf::Color::Red);
 	restartText.setOrigin
@@ -174,7 +181,7 @@ int main()
 	);
 	restartText.setPosition(500.f, 750.f);
 
-	// "PRADETI ZAIDIMA?"
+	// "PRESS ENTER TO START"
 	sf::Text gameStartText;
 
 	gameStartText.setFont(font);
@@ -198,21 +205,23 @@ int main()
 		checkWindowEvents(window);
 	}
 
+	music.play();	// Paleisti muzika
+
 	while (window.isOpen())
 	{
 		// LANGO VALDYMAS
 		checkWindowEvents(window);
 
 		// LIETAUS JUDEJIMAS/VALDYMAS
-		for (int i = 0; i < ENEMY_COUNT; i++)
+		for (uint8_t i = 0; i < ENEMY_COUNT; i++)
 		{
 			if (enemies[i].getPosition().y > 950.f)
 			{
-				enemyProperties[i].first = randomizerX();
-				enemyProperties[i].second = randomizerSpeed();
+				enemyProperties[i].first = randomizer(options.minX, options.maxX);
+				enemyProperties[i].second = randomizer(options.minSpeed, options.maxSpeed);
 
 				enemies[i].setPosition(enemyProperties[i].first, 0.f);
-				enemies[i].setFillColor(sf::Color(0, 255, 255, randomizerColor()));
+				enemies[i].setFillColor(sf::Color(0, 255, 255, randomizer(options.minAlpha, options.maxAlpha)));
 
 				score++;
 			}
@@ -221,37 +230,39 @@ int main()
 		switch (score)
 		{
 		case 50:
-			minSpeed = 3;
-			maxSpeed = 6;
+			options.minSpeed = 3;
+			options.maxSpeed = 6;
 			break;
 
 		case 100:
-			minSpeed = 4;
-			maxSpeed = 7;
+			options.minSpeed = 4;
+			options.maxSpeed = 7;
 			break;
 
 		case 150:
-			minSpeed = 5;
-			maxSpeed = 8;
+			options.minSpeed = 5;
+			options.maxSpeed = 8;
 			break;
 
 		default:
 			break;
 		}
 
-		for (int i = 0; i < ENEMY_COUNT; i++)
+		for (uint8_t i = 0; i < ENEMY_COUNT; i++)
 		{
 			enemies[i].setPosition(enemyProperties[i].first, enemies[i].getPosition().y + enemyProperties[i].second);
 		}
 
-		for (int i = 0; i < ENEMY_COUNT; i++)
+		for (uint8_t i = 0; i < ENEMY_COUNT; i++)
 		{
 			if (player.getGlobalBounds().intersects(enemies[i].getGlobalBounds()))
 			{
 				window.draw(gameOverText);
 				window.draw(exitText);
 				window.draw(restartText);
+
 				window.display();
+
 				music.stop();
 
 				while (window.isOpen())
@@ -276,7 +287,7 @@ int main()
 		window.draw(player);
 		window.draw(scoreText);
 
-		for (int i = 0; i < ENEMY_COUNT; i++)
+		for (uint8_t i = 0; i < ENEMY_COUNT; i++)
 		{
 			window.draw(enemies[i]);
 		}
