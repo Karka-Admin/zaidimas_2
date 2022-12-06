@@ -3,7 +3,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 
-#include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -11,20 +10,22 @@
 #include <random>
 
 // ZAIDIMO NUSTATYMAI
-#define ENEMY_COUNT	7
-
 struct Options
 {
-	uint8_t		minSpeed	= 2;
-	uint8_t		maxSpeed	= 4;
-	uint16_t	minX		= 0;
-	uint16_t	maxX		= 950;
-	uint8_t		minAlpha	= 100;
-	uint8_t		maxAlpha	= 255;
+	uint8_t		minSpeed	= 2;	// Maziausias laselio greitis
+	uint8_t		maxSpeed	= 4;	// Didziausias laselio greitis
+
+	uint8_t		enemyCount	= 7;	// Laseliu skaicius
+
+	uint8_t		minAlpha	= 100;	// Maziausias laselio permatomumas
+	uint8_t		maxAlpha	= 255;	// Didziausias laselio permatomumas
+
+	uint16_t	minX		= 0;	// Kairiausia laselio pozicija
+	uint16_t	maxX		= 950;	// Desiniausia laselio pozicija
 };
 
 // ZAIDEJO JUDEJIMO VALDYMAS
-void playerMovement(sf::RectangleShape& player)
+void playerMovement(sf::RectangleShape &player)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && player.getPosition().x < 950)
 	{
@@ -46,7 +47,7 @@ float randomizer(uint16_t &min, uint16_t &max)
 	return float(distr(gen));
 }
 
-float randomizer(uint8_t& min, uint8_t& max)
+float randomizer(uint8_t &min, uint8_t &max)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -56,7 +57,7 @@ float randomizer(uint8_t& min, uint8_t& max)
 }
 
 // LANGO IVYKIU TIKRINIMAS
-void checkWindowEvents(sf::RenderWindow& window)
+void checkWindowEvents(sf::RenderWindow &window)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
@@ -64,7 +65,7 @@ void checkWindowEvents(sf::RenderWindow& window)
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 	{
-		
+		// TODO: PERKRAUTI ZAIDIMA
 	}
 }
 
@@ -99,20 +100,20 @@ int main()
 	player.setPosition(0.f, 850.f);
 
 	// LIETUS
-	std::pair<float, float> enemyProperties[ENEMY_COUNT];
+	std::vector<std::pair<float, float>> enemyProperties(options.enemyCount);
 	sf::Vector2f enemySize(20.f, 65.f);
 	sf::RectangleShape enemy(enemySize);
-	std::vector <sf::RectangleShape> enemies(ENEMY_COUNT);
+	std::vector <sf::RectangleShape> enemies(options.enemyCount);
 
 	enemy.setFillColor(sf::Color(0, 255, 255, 255));
 
-	for (uint8_t i = 0; i < ENEMY_COUNT; i++)
+	for (uint8_t i = 0; i < options.enemyCount; i++)
 	{
 		enemyProperties[i].first = randomizer(options.minX, options.maxX);
 		enemyProperties[i].second = randomizer(options.minSpeed, options.maxSpeed);
 	}
 
-	for (uint8_t i = 0; i < ENEMY_COUNT; i++)
+	for (uint8_t i = 0; i < options.enemyCount; i++)
 	{
 		enemies[i] = enemy;
 		enemies[i].setPosition(randomizer(options.minX, options.maxX), 0.f);
@@ -123,7 +124,6 @@ int main()
 	sf::Font font;
 	if (!font.loadFromFile("font.ttf"))
 	{
-		std::cerr << "ERROR\n";
 		return -1;
 	}
 
@@ -197,6 +197,9 @@ int main()
 
 
 	// PRADZIOS LANGAS
+start:
+	
+	window.clear();
 	window.draw(gameStartText);
 	window.display();
 
@@ -205,15 +208,19 @@ int main()
 		checkWindowEvents(window);
 	}
 
-	music.play();	// Paleisti muzika
-
 	while (window.isOpen())
 	{
+		// GROTI MUZIKA
+		if (music.getStatus() == sf::Sound::Stopped)
+		{
+			music.play();
+		}
+
 		// LANGO VALDYMAS
 		checkWindowEvents(window);
 
 		// LIETAUS JUDEJIMAS/VALDYMAS
-		for (uint8_t i = 0; i < ENEMY_COUNT; i++)
+		for (uint8_t i = 0; i < options.enemyCount; i++)
 		{
 			if (enemies[i].getPosition().y > 950.f)
 			{
@@ -248,12 +255,14 @@ int main()
 			break;
 		}
 
-		for (uint8_t i = 0; i < ENEMY_COUNT; i++)
+		// LASU KRITIMAS
+		for (uint8_t i = 0; i < options.enemyCount; i++)
 		{
 			enemies[i].setPosition(enemyProperties[i].first, enemies[i].getPosition().y + enemyProperties[i].second);
 		}
 
-		for (uint8_t i = 0; i < ENEMY_COUNT; i++)
+		// AR ZAIDEJAS PALIETE LASA
+		for (uint8_t i = 0; i < options.enemyCount; i++)
 		{
 			if (player.getGlobalBounds().intersects(enemies[i].getGlobalBounds()))
 			{
@@ -287,7 +296,7 @@ int main()
 		window.draw(player);
 		window.draw(scoreText);
 
-		for (uint8_t i = 0; i < ENEMY_COUNT; i++)
+		for (uint8_t i = 0; i < options.enemyCount; i++)
 		{
 			window.draw(enemies[i]);
 		}
