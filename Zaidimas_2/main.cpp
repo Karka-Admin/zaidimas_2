@@ -12,7 +12,7 @@
 // ZAIDIMO NUSTATYMAI
 struct Options
 {
-	uint8_t		minSpeed	= 2;	// Maziausias laselio greitis
+	uint8_t		minSpeed	= 2;	// Maziausias laselio greitis greitis
 	uint8_t		maxSpeed	= 4;	// Didziausias laselio greitis
 
 	uint8_t		enemyCount	= 7;	// Laseliu skaicius
