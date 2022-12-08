@@ -101,8 +101,6 @@ int main()
 	sf::RectangleShape enemy(enemySize);
 	std::vector <sf::RectangleShape> enemies(options.enemyCount);
 
-	enemy.setFillColor(sf::Color(0, 255, 255, 255));
-
 	for (uint8_t i = 0; i < options.enemyCount; i++)
 	{
 		enemyProperties[i].first = randomizer(options.minX, options.maxX);
