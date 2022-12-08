@@ -12,7 +12,7 @@
 // ZAIDIMO NUSTATYMAI
 struct Options
 {
-	uint8_t		minSpeed	= 2;	// Maziausias laselio greitis
+	uint8_t		minSpeed	= 1;	// Maziausias laselio greitis
 	uint8_t		maxSpeed	= 4;	// Didziausias laselio greitis
 
 	uint8_t		enemyCount	= 7;	// Laseliu skaicius
@@ -63,10 +63,6 @@ void checkWindowEvents(sf::RenderWindow &window)
 	{
 		window.close();
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-	{
-		// TODO: PERKRAUTI ZAIDIMA
-	}
 }
 
 int main()
@@ -89,7 +85,7 @@ int main()
 	// VEIKEJAS
 	sf::Vector2f playerSize(50.f, 50.f);
 	sf::RectangleShape player(playerSize);
-	sf::Texture playerTexture;
+	sf::Texture	playerTexture;
 
 	if (!playerTexture.loadFromFile("sugar.jpg"))
 	{
@@ -167,20 +163,6 @@ int main()
 	);
 	exitText.setPosition(500.f, 500.f);
 
-	// "PRESS R TO RESTART"
-	sf::Text restartText;
-
-	restartText.setFont(font);
-	restartText.setString("PRESS R TO RESTART");
-	restartText.setCharacterSize(75);
-	restartText.setFillColor(sf::Color::Red);
-	restartText.setOrigin
-	(
-		restartText.getLocalBounds().left + restartText.getGlobalBounds().width / 2.0f,
-		restartText.getLocalBounds().top + restartText.getGlobalBounds().height / 2.0f
-	);
-	restartText.setPosition(500.f, 750.f);
-
 	// "PRESS ENTER TO START"
 	sf::Text gameStartText;
 
@@ -197,8 +179,6 @@ int main()
 
 
 	// PRADZIOS LANGAS
-start:
-	
 	window.clear();
 	window.draw(gameStartText);
 	window.display();
@@ -251,6 +231,21 @@ start:
 			options.maxSpeed = 8;
 			break;
 
+		case 200:
+			options.minSpeed = 6;
+			options.maxSpeed = 9;
+			break;
+
+		case 250:
+			options.minSpeed = 7;
+			options.maxSpeed = 10;
+			break;
+
+		case 300:
+			options.minSpeed = 8;
+			options.maxSpeed = 11;
+			break;
+
 		default:
 			break;
 		}
@@ -268,7 +263,6 @@ start:
 			{
 				window.draw(gameOverText);
 				window.draw(exitText);
-				window.draw(restartText);
 
 				window.display();
 
